@@ -1,0 +1,19 @@
+apiVersion: v2
+name: prometheus-example-app
+description: A Helm chart for testing Prometheus monitoring in Kubernetes.
+type: application
+version: 0.1.0
+appVersion: "0.3.0"
+home: https://github.com/robinlant/prometheus-example-app
+sources:
+  - https://github.com/robinlant/prometheus-example-app
+  - https://github.com/brancz/prometheus-example-app
+keywords:
+  - prometheus
+  - monitoring
+  - metrics
+  - kubernetes
+  - servicemonitor
+  - podmonitor
+annotations:
+  artifacthub.io/license: MIT

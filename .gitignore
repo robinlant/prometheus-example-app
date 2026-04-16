@@ -1,0 +1,14 @@
+# Helm package artifacts
+*.tgz
+charts/*/charts/
+charts/*/Chart.lock
+dist/
+
+# OS
+.DS_Store
+
+# Editors
+.idea/
+.vscode/
+*.swp
+*~

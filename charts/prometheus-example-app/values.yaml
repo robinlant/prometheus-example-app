@@ -1,0 +1,39 @@
+replicaCount: 1
+
+image:
+  repository: quay.io/brancz/prometheus-example-app
+  tag: v0.3.0
+  pullPolicy: IfNotPresent
+
+imagePullSecrets: []
+resources: {}
+
+service:
+  type: ClusterIP
+  port: 8080
+  annotations: {}
+  labels: {}
+
+deployment:
+  annotations: {}
+  labels: {}
+
+pod:
+  annotations: {}
+  labels: {}
+
+serviceMonitor:
+  enabled: false
+  annotations: {}
+  labels: {}
+  path: /metrics
+  interval: 30s
+  scrapeTimeout: 10s
+
+podMonitor:
+  enabled: false
+  annotations: {}
+  labels: {}
+  path: /metrics
+  interval: 30s
+  scrapeTimeout: 10s

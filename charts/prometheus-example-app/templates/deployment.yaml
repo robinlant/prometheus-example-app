@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "prometheus-example-app.fullname" . }}
+  labels:
+    {{- with (omit .Values.deployment.labels "app.kubernetes.io/name" "app.kubernetes.io/instance" "app.kubernetes.io/managed-by") }}
+    {{- include "prometheus-example-app.renderStringMap" . | trimSuffix "\n" | nindent 4 }}
+    {{- end }}
+    {{- include "prometheus-example-app.labels" . | nindent 4 }}
+  {{- with .Values.deployment.annotations }}
+  annotations:
+    {{- include "prometheus-example-app.renderStringMap" . | trimSuffix "\n" | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "prometheus-example-app.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- with (omit .Values.pod.labels "app.kubernetes.io/name" "app.kubernetes.io/instance") }}
+        {{- include "prometheus-example-app.renderStringMap" . | trimSuffix "\n" | nindent 8 }}
+        {{- end }}
+        {{- include "prometheus-example-app.selectorLabels" . | nindent 8 }}
+      {{- with .Values.pod.annotations }}
+      annotations:
+        {{- include "prometheus-example-app.renderStringMap" . | trimSuffix "\n" | nindent 8 }}
+      {{- end }}
+    spec:
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      containers:
+        - name: app
+          image: {{ include "prometheus-example-app.image" . }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          {{- with .Values.resources }}
+          resources:
+            {{- toYaml . | nindent 12 }}
+          {{- end }}

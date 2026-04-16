@@ -1,0 +1,22 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "prometheus-example-app.fullname" . }}
+  labels:
+    {{- with (omit .Values.service.labels "app.kubernetes.io/name" "app.kubernetes.io/instance" "app.kubernetes.io/managed-by") }}
+    {{- include "prometheus-example-app.renderStringMap" . | trimSuffix "\n" | nindent 4 }}
+    {{- end }}
+    {{- include "prometheus-example-app.labels" . | nindent 4 }}
+  {{- with .Values.service.annotations }}
+  annotations:
+    {{- include "prometheus-example-app.renderStringMap" . | trimSuffix "\n" | nindent 4 }}
+  {{- end }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http
+      protocol: TCP
+      name: http
+  selector:
+    {{- include "prometheus-example-app.selectorLabels" . | nindent 4 }}

@@ -1,0 +1,24 @@
+{{- if .Values.podMonitor.enabled }}
+apiVersion: monitoring.coreos.com/v1
+kind: PodMonitor
+metadata:
+  name: {{ include "prometheus-example-app.fullname" . }}
+  labels:
+    {{- include "prometheus-example-app.labels" . | nindent 4 }}
+    {{- with .Values.podMonitor.labels }}
+    {{- include "prometheus-example-app.renderStringMap" . | trimSuffix "\n" | nindent 4 }}
+    {{- end }}
+  {{- with .Values.podMonitor.annotations }}
+  annotations:
+    {{- include "prometheus-example-app.renderStringMap" . | trimSuffix "\n" | nindent 4 }}
+  {{- end }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "prometheus-example-app.selectorLabels" . | nindent 6 }}
+  podMetricsEndpoints:
+    - port: http
+      path: {{ .Values.podMonitor.path }}
+      interval: {{ .Values.podMonitor.interval }}
+      scrapeTimeout: {{ .Values.podMonitor.scrapeTimeout }}
+{{- end }}
